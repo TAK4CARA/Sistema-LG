@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Visualizar Romaneio</title>
+<link rel="stylesheet" href="vizualizar-romaneio.css">
+
+<script>
+if (!localStorage.getItem("usuarioLogado")) {
+    window.location.href = "login.html";
+}
+</script>
+
+</head>
+<body>
+
+<h1>📄 Visualização do Romaneio</h1>
+
+<div class="box info-grid">
+    <div class="info-item"><strong>ID</strong><span id="rId"></span></div>
+    <div class="info-item"><strong>Data</strong><span id="rData"></span></div>
+    <div class="info-item"><strong>Emitido por</strong><span id="rEmitido"></span></div>
+
+    <div class="info-item"><strong>Unidade</strong><span id="rUnidade"></span></div>
+    <div class="info-item"><strong>Placa</strong><span id="rPlaca"></span></div>
+    <div class="info-item"><strong>Motorista</strong><span id="rMotorista"></span></div>
+</div>
+
+<div class="box">
+    <h3>📦 Notas do Romaneio</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Ordem</th>
+                <th>Nota Fiscal</th>
+                <th>Destinatário</th>
+                <th>Cidade</th>
+                <th>Volumes</th>
+                <th>Agendamento</th>
+                <th>Produto</th>
+            </tr>
+        </thead>
+        <tbody id="listaNotas"></tbody>
+    </table>
+</div>
+
+<div>
+    <button class="btn btn-voltar" onclick="voltar()">⬅ Voltar</button>
+    <button class="btn btn-print" onclick="imprimir()">🖨 Imprimir</button>
+</div>
+
+<script>
+function carregarRomaneio() {
+    const id = parseInt(localStorage.getItem("romaneioSelecionado"));
+    const romaneios = JSON.parse(localStorage.getItem("romaneios")) || [];
+
+    const romaneio = romaneios.find(r => r.id === id);
+
+    if (!romaneio) {
+        alert("Romaneio não encontrado!");
+        voltar();
+        return;
+    }
+
+    document.getElementById("rId").innerText = romaneio.id;
+    document.getElementById("rData").innerText = romaneio.data;
+    document.getElementById("rEmitido").innerText = romaneio.emitidoPor;
+    document.getElementById("rUnidade").innerText = romaneio.unidade;
+    document.getElementById("rPlaca").innerText = romaneio.placa;
+    document.getElementById("rMotorista").innerText = romaneio.motorista;
+
+    const tbody = document.getElementById("listaNotas");
+    tbody.innerHTML = "";
+
+    romaneio.notas.forEach((n, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${n.nf || n.notaFiscal || "-"}</td>
+            <td>${n.destinatario || n.recebedor || "-"}</td>
+            <td>${n.cidade || "-"}</td>
+            <td>${n.volumes || "-"}</td>
+            <td>${n.agendamento || "-"}</td>
+            <td>${n.produto || "-"}</td>
+            
+
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function voltar() {
+    window.location.href = "romaneios.html";
+}
+
+function imprimir() {
+    window.print();
+}
+
+carregarRomaneio();
+</script>
+
+</body>
+</html>

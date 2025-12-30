@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Tabela de Notas</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script>
+if (!localStorage.getItem("usuarioLogado")) {
+    window.location.href = "login.html";
+}
+</script>
+</head>
+
+<body>
+
+<h2>Notas Cadastradas</h2>
+
+<table id="tabelaNotas">
+    <thead>
+        <tr>
+            <th>NF</th>
+            <th>Destinatário</th>
+            <th>Cidade</th>
+            <th>Volumes</th>
+            <th>Produto</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<button class="btn" onclick="location.href='index.html'">Voltar ao Menu</button>
+<button class="btn" onclick="window.print()">Imprimir</button>
+
+<!-- MODAL (OCULTO) -->
+<div id="modalNota" class="modal">
+    <div class="modal-content">
+        <h3>Detalhes da Nota Fiscal</h3>
+
+        <p><strong>Chave de Acesso:</strong> <span id="mChave"></span></p>
+        <p><strong>NF:</strong> <span id="mNF"></span></p>
+        <p><strong>Volumes:</strong> <span id="mVolumes"></span></p>
+        <p><strong>CNPJ:</strong> <span id="mCNPJ"></span></p>
+        <p><strong>Razão Social:</strong> <span id="mDestinatario"></span></p>
+        <p><strong>Cidade:</strong> <span id="mCidade"></span></p>
+        
+
+        <button class="btn" onclick="fecharModal()">Fechar</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    carregarTabela();
+});
+
+function carregarTabela() {
+    const notas = JSON.parse(localStorage.getItem("notas")) || [];
+    const tbody = document.querySelector("#tabelaNotas tbody");
+
+    tbody.innerHTML = "";
+
+    notas.forEach((nota, index) => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td class="clickable">${nota.nf}</td>
+            <td>${nota.destinatario}</td>
+            <td>${nota.cidade}</td>
+            <td>${nota.volumes}</td>
+            <td>${nota.produto}</td>
+                <button class="btn excluir" onclick="excluirNota(${index})">❌</button>
+            </td>
+        `;
+
+        tr.querySelector(".clickable").onclick = () => abrirModal(nota);
+        tbody.appendChild(tr);
+    });
+}
+
+// MODAL
+function abrirModal(nota) {
+    document.getElementById("mChave").innerText = nota.chave || "";
+    document.getElementById("mNF").innerText = nota.nf || "";
+    document.getElementById("mVolumes").innerText = nota.volumes || "";
+    document.getElementById("mCNPJ").innerText = nota.cnpj || "";
+    document.getElementById("mDestinatario").innerText = nota.destinatario || "";
+    document.getElementById("mCidade").innerText = nota.cidade || "";
+
+    document.getElementById("modalNota").style.display = "flex";
+}
+
+function fecharModal() {
+    document.getElementById("modalNota").style.display = "none";
+}
+
+// ❌ EXCLUIR NOTA
+function excluirNota(index) {
+    if (!confirm("Deseja realmente excluir esta nota?")) return;
+
+    let notas = JSON.parse(localStorage.getItem("notas")) || [];
+
+    notas.splice(index, 1); // remove a nota
+    localStorage.setItem("notas", JSON.stringify(notas));
+
+    carregarTabela();
+}
+</script>
+
+
+</body>
+</html>
+

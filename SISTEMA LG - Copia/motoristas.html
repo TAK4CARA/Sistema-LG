@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cadastro de Motoristas</title>
+<link rel="stylesheet" href="style.css">
+
+<script>
+if (!localStorage.getItem("usuarioLogado")) {
+    window.location.href = "login.html";
+}
+</script>
+</head>
+<body>
+
+
+<h2 style="text-align:center;">🚚 CADASTRO DE MOTORISTAS</h2>
+
+<form id="formMotorista" onsubmit="salvarMotorista(event)">
+<fieldset>
+<legend><strong>DADOS DO MOTORISTA</strong></legend>
+
+<label>Nome do Motorista:</label>
+<input type="text" id="nomeMotorista" required>
+
+<label>Placa do Veículo:</label>
+<input type="text" id="placa" required maxlength="8" placeholder="ABC1D23">
+
+<label>Tipo de Veículo:</label>
+<select id="tipoVeiculo" required>
+    <option value="">Selecione</option>
+    <option>Carreta</option>
+    <option>Truck</option>
+    <option>Toco</option>
+    <option>VLC</option>
+    <option>Utilitário</option>
+</select>
+</fieldset>
+
+<div style="text-align:center; margin-top:20px;">
+    <button type="submit" class="btn">Salvar Motorista</button>
+    <button type="button" class="btn excluir" onclick="limparMotorista()">Limpar</button>
+    <button type="button" class="btn" onclick="location.href='index.html'">Voltar</button>
+</div>
+</form>
+
+<hr>
+
+<h3 style="text-align:center;">Motoristas Cadastrados</h3>
+
+<table id="tabelaMotoristas">
+<thead>
+<tr>
+    <th>Nome</th>
+    <th>Placa</th>
+    <th>Tipo Veículo</th>
+    <th>Excluir</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<script src="motoristas.js"></script>
+</body>
+</html>

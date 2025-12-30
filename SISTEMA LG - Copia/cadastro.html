@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cadastrar Nota Fiscal</title>
+<link rel="stylesheet" href="style.css">
+
+
+
+<script>
+if (!localStorage.getItem("usuarioLogado")) {
+    window.location.href = "login.html";
+}
+</script>
+
+
+
+</head>
+<body>
+
+<h2 style="text-align:center;">CADASTRO DE NOTA FISCAL</h2>
+
+<form id="formNota" onsubmit="salvarNota(event)">
+
+<fieldset>
+<legend><strong>DADOS DA NF</strong></legend>
+
+<label>Chave de Acesso:</label>
+<input type="text" id="chave" required maxlength="44">
+
+<label>NF:</label>
+<input type="text" id="nf" required>
+
+<label>Volumes:</label>
+<input type="number" id="volumes" required>
+
+<label>Produto</label>
+<input type="text" id="produto" required>
+
+</fieldset>
+
+<fieldset>
+<legend><strong>DESTINATÁRIO</strong></legend>
+
+<label>CNPJ:</label>
+<input type="text" id="cnpj" required>
+
+<label>Nome / Razão Social:</label>
+<input type="text" id="destinatario" required>
+
+<label>Cidade:</label>
+<input type="text" id="cidade" required>
+
+</fieldset>
+
+<div style="text-align:center; margin-top:20px;">
+    <button  type="submit" class="btn">Salvar Nota</button>
+    <button class="btn excluir" type="button" onclick="limparFormulario()">Limpar</button>
+    <button class="btn" type="button" onclick="location.href='index.html'">Voltar</button>
+</div>
+
+</form>
+
+<script src="script.js"></script>
+</body>
+</html>
+

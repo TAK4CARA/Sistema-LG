@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Consulta de Romaneios</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background: #2c3e50;
+    color: #fff;
+}
+
+.btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #3498db;
+}
+
+.btn-ver { background: #3498db; color: #fff; }
+.btn-print { background: #08fc65; color: #fff; }
+.btn-del { background: #e74c3c; color: #fff; }
+
+.topo {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+</style>
+
+<script>
+if (!localStorage.getItem("usuarioLogado")) {
+    window.location.href = "login.html";
+}
+</script>
+
+</head>
+<body>
+
+<div class="topo">
+    <h1>📄 Consulta de Romaneios</h1>
+    <button class="btn" onclick="location.href='index.html'">⬅ Voltar</button>
+</div>
+
+<table>
+<thead>
+<tr>
+    <th>ID</th>
+    <th>Data</th>
+    <th>Unidade</th>
+    <th>Placa</th>
+    <th>Emitido Por</th>
+    <th>Motorista</th>
+    <th>Qtd. Notas</th>
+    <th>Ações</th>
+</tr>
+</thead>
+<tbody id="listaRomaneios"></tbody>
+</table>
+
+<script>
+function carregarRomaneios() {
+    const tbody = document.getElementById("listaRomaneios");
+    tbody.innerHTML = "";
+
+    const romaneios = JSON.parse(localStorage.getItem("romaneios")) || [];
+
+    if (romaneios.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8">Nenhum romaneio encontrado.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    romaneios.forEach(r => {
+        const tr = document.createElement("tr");
+
+        tr.innerHTML = `
+            <td>${r.id}</td>
+            <td>${r.data}</td>
+            <td>${r.unidade}</td>
+            <td>${r.placa}</td>
+            <td>${r.emitidoPor}</td>
+            <td>${r.motorista}</td>
+            <td>${r.notas.length}</td>
+            <td>
+                <button class="btn btn-ver" onclick="verRomaneio(${r.id})">Ver</button>                
+                <button class="btn btn-del" onclick="excluirRomaneio(${r.id})">Excluir</button>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+function verRomaneio(id) {
+    localStorage.setItem("romaneioSelecionado", id);
+    window.location.href = "visualizar-romaneio.html";
+}
+
+function imprimirRomaneio(id) {
+    localStorage.setItem("romaneioSelecionado", id);
+    window.location.href = "romaneio-impressao.html";
+}
+
+function excluirRomaneio(id) {
+    if (!confirm("Deseja realmente excluir este romaneio?")) return;
+
+    let romaneios = JSON.parse(localStorage.getItem("romaneios")) || [];
+    romaneios = romaneios.filter(r => r.id !== id);
+
+    localStorage.setItem("romaneios", JSON.stringify(romaneios));
+    carregarRomaneios();
+}
+
+carregarRomaneios();
+</script>
+
+</body>
+</html>
